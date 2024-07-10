@@ -1,0 +1,30 @@
+spconv==1.2.1配置：
+
+1.安装cmake和boost
+有sudo权限：
+sudo snap install cmake --classic
+cmake --version
+sudo apt-get install libboost-all-dev
+无sudo权限：
+pip install cmake
+pip install boost （或conda install）
+  pip安装需要配置boost路径，将'-DCMAKE_CXX_FLAGS:STRING=-I /data/zhaoshenao/anaconda3/envs/DTS/include',添加到setup.py文件中的如下位置：
+    def build_extension(self, ext):
+        extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
+        cmake_args = [# '-G "Visual Studio 15 2017 Win64"',
+                      '-DCMAKE_PREFIX_PATH={}'.format(LIBTORCH_ROOT),
+                      '-DPYBIND11_PYTHON_VERSION={}'.format(PYTHON_VERSION),
+                      '-DSPCONV_BuildTests=OFF',
+                      '-DPYTORCH_VERSION={}'.format(PYTORCH_VERSION_NUMBER)，
+                      '-DCMAKE_CXX_FLAGS:STRING=-I /data/zhaoshenao/anaconda3/envs/DTS/include',
+                      ] #  -arch=sm_61
+
+2.下载安装spconv==1.2.1
+git clone -b v1.2.1 https://github.com/traveller59/spconv.git --recursive
+cd spconv/
+python setup.py bdist_wheel
+cd dist
+pip install spconv-1.2.1-cp38-cp38-linux_x86_64.whl
+
+
+spconv==2.x版本可直接如pip install spconv-cu113==2.1.21安装
