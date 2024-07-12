@@ -1,0 +1,26 @@
+1.conda下载：
+
+conda install -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main gcc\_impl\_linux-64=8.4.0
+conda install -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main gxx\_impl\_linux-64=8.4.0
+通过命令which gcc, gcc -v, g++ -v查看是否成功（关闭窗口，不激活conda环境情况下，gcc和g++依旧是之前系统的版本）
+
+2.若不成功，则配置环境变量
+export PATH添加至.bashrc，通过 vim ~/.bashrc 打开编辑，添加如下内容即可：
+export PATH=你的conda环境路径/bin/:你的conda环境路径/lib/:$PATH
+若发现是失败的，还是老的gcc/g++，这里是较难发现的地方！被conda坑了
+因为conda下载后的gcc/g++并不以gcc/g++命名，而是有如下对应：
+gcc: x86_64-conda-linux-gnu-cc
+g++: x86_64-conda-linux-gnu-c++
+所以我们可以用如下命令再新建软连接
+建立软连接命令（${bin}代表你的conda环境bin目录）：
+
+# cd转至你conda下载gcc/g++的bin目录，通过pwd获得目录路径赋值
+
+bin=`pwd`
+
+# 或者使用        bin=你的bin目录路径
+
+ln -s ${bin}/x86_64-conda-linux-gnu-cc ${bin}/gcc
+ln -s ${bin}/x86_64-conda-linux-gnu-c++ ${bin}/g++ 
+
+# ln -s <源文件路径> <建立软连接路径> 
